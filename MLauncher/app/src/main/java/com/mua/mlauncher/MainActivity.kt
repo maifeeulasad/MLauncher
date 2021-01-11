@@ -3,7 +3,6 @@ package com.mua.mlauncher
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -20,6 +19,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
 
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+
     private lateinit var applicationListAdapter: ApplicationListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

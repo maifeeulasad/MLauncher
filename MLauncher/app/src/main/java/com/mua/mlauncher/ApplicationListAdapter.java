@@ -1,6 +1,5 @@
 package com.mua.mlauncher;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +51,6 @@ public class ApplicationListAdapter
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
                 applicationList.clear();
-                Log.d("d--muapp",applicationList.size()+" app");
-                Log.d("d--muapp",originalApplicationList.size()+" ori");
                 for (ApplicationInfo applicationInfo : originalApplicationList) {
                     if (applicationInfo.getApplicationName().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         applicationList.add(applicationInfo);
@@ -75,7 +72,7 @@ public class ApplicationListAdapter
         return applicationList.size();
     }
 
-    private void setApplicationListOnly(List<ApplicationInfo> applicationList){
+    private void setApplicationListOnly(List<ApplicationInfo> applicationList) {
         this.applicationList = applicationList;
         notifyDataSetChanged();
     }
@@ -85,9 +82,6 @@ public class ApplicationListAdapter
                 (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
         this.originalApplicationList = new ArrayList<>(applicationList);
         this.applicationList = new ArrayList<>(applicationList);
-
-        Log.d("d--muakk",applicationList.size()+" app");
-        Log.d("d--muakk",originalApplicationList.size()+" ori");
         notifyDataSetChanged();
     }
 

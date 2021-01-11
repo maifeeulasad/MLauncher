@@ -9,8 +9,7 @@ import androidx.lifecycle.MutableLiveData
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val applications
-            = MutableLiveData(mutableListOf<ApplicationInfo>())
+    private val applications = MutableLiveData(mutableListOf<ApplicationInfo>())
     val queryString = ObservableField<String>("")
 
     init {
