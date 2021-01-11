@@ -4,7 +4,7 @@
     <data>
 
         <variable
-            name="dashboard"
+            name="main"
             type="com.mua.mlauncher.MainViewModel" />
     </data>
 
@@ -18,16 +18,12 @@
         tools:context=".MainActivity">
 
         <EditText
-            android:id="@+id/et_search"
+            android:text="@={main.queryString}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="Look for some Application"
             android:inputType="text"
-            android:paddingStart="6dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="6dp" />
-
+            android:padding="20dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_apps"

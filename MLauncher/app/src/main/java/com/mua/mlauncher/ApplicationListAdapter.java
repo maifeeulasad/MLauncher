@@ -18,6 +18,7 @@ public class ApplicationListAdapter
         extends RecyclerView.Adapter<ApplicationListAdapter.AppUsageListViewHolder> {
     private List<ApplicationInfo> applicationList = new ArrayList<>();
     private final ApplicationClickListener applicationClickListener;
+    private String searchQuery = "";
 
     public ApplicationListAdapter(ApplicationClickListener applicationClickListener) {
         this.applicationClickListener = applicationClickListener;
@@ -64,6 +65,14 @@ public class ApplicationListAdapter
         Collections.sort(applicationList,
                 (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
         notifyDataSetChanged();
+    }
+
+    private void clearSearchQuery(){
+        this.searchQuery = "";
+    }
+
+    private void setSearchQuery(String searchQuery){
+        this.searchQuery = searchQuery;
     }
 
     /*

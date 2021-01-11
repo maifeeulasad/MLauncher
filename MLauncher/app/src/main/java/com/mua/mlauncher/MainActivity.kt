@@ -1,11 +1,17 @@
 package com.mua.mlauncher
 
+import android.R.attr.name
+import android.R.attr.password
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.opengl.ETC1.isValid
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +29,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        mBinding.dashboard = viewModel
+        mBinding.main = viewModel
         mBinding.lifecycleOwner = this
 
         init()
@@ -32,7 +38,18 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     private fun init() {
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
+        initSearch()
         initList()
+    }
+
+    private fun initSearch() {
+        val callback: OnPropertyChangedCallback = object : OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable, propertyId: Int) {
+                Log.d("d--mua", viewModel.queryString.get() + "")
+            }
+        }
+
+        viewModel.queryString.addOnPropertyChangedCallback(callback)
     }
 
     private fun initList() {

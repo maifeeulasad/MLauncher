@@ -2,13 +2,16 @@ package com.mua.mlauncher
 
 import android.app.Application
 import android.content.pm.PackageManager
+import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val applications = MutableLiveData(mutableListOf<ApplicationInfo>())
+    private val applications
+            = MutableLiveData(mutableListOf<ApplicationInfo>())
+    val queryString = ObservableField<String>("")
 
     init {
         listAllApplication(application.packageManager)
