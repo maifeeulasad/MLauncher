@@ -1,10 +1,8 @@
 package com.mua.mlauncher;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ApplicationListAdapter
         extends RecyclerView.Adapter<ApplicationListAdapter.AppUsageListViewHolder> {
     private List<ApplicationInfo> applicationList = new ArrayList<>();
-    private ApplicationClickListener applicationClickListener;
+    private final ApplicationClickListener applicationClickListener;
 
     public ApplicationListAdapter(ApplicationClickListener applicationClickListener) {
         this.applicationClickListener = applicationClickListener;
@@ -55,7 +54,6 @@ public class ApplicationListAdapter
     }
 
 
-
     @Override
     public int getItemCount() {
         return applicationList.size();
@@ -63,6 +61,8 @@ public class ApplicationListAdapter
 
     public void setApplicationList(List<ApplicationInfo> applicationList) {
         this.applicationList = applicationList;
+        Collections.sort(applicationList,
+                (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
         notifyDataSetChanged();
     }
 
@@ -80,7 +80,7 @@ public class ApplicationListAdapter
 
 }
 
-enum ApplicationType{
+enum ApplicationType {
 
     TYPE_CONTENT(0),
     TYPE_HEADER(1),
@@ -89,6 +89,6 @@ enum ApplicationType{
     int id;
 
     ApplicationType(int id) {
-        this.id=id;
+        this.id = id;
     }
 }
