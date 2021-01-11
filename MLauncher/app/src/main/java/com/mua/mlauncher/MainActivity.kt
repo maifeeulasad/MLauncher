@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ApplicationClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,15 +17,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val appUsageListAdapter = ApplicationListAdapter()
+        val appUsageListAdapter = ApplicationListAdapter(this)
         val appUsageRecyclerView: RecyclerView = findViewById(R.id.rv_apps)
         appUsageRecyclerView.adapter = appUsageListAdapter
         appUsageRecyclerView.layoutManager = LinearLayoutManager(this)
 
         val allApplications = listAllApplication()
-        for(app in allApplications){
-            Log.d("d--mua",app.applicationName)
-        }
 
         appUsageListAdapter.setApplicationList(allApplications)
     }
@@ -39,11 +36,16 @@ class MainActivity : AppCompatActivity() {
             if (packageInfo!!.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
                 val applicationName = packageInfo.applicationInfo.loadLabel(packageManager).toString()
                 val applicationDrawable = packageInfo.applicationInfo.loadIcon(packageManager)
+                val applicationPackage = packageInfo.applicationInfo.packageName
 
-                applications.add(ApplicationInfo(applicationName,applicationDrawable))
+                applications.add(ApplicationInfo(applicationName,applicationPackage,applicationDrawable))
             }
         }
         return applications
+    }
+
+    override fun onApplicationClick(applicationInfo: com.mua.mlauncher.ApplicationInfo) {
+        Log.d("d--mua",applicationInfo.applicationPackage)
     }
 
 }
