@@ -1,10 +1,7 @@
 package com.mua.mlauncher
 
-import android.R.attr.name
-import android.R.attr.password
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.ETC1.isValid
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -23,6 +20,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
 
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var applicationListAdapter: ApplicationListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +43,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     private fun initSearch() {
         val callback: OnPropertyChangedCallback = object : OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable, propertyId: Int) {
-                Log.d("d--mua", viewModel.queryString.get() + "")
+                applicationListAdapter.filter.filter(viewModel.queryString.get())
             }
         }
 
@@ -53,13 +51,13 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     }
 
     private fun initList() {
-        val appUsageListAdapter = ApplicationListAdapter(this)
+        applicationListAdapter = ApplicationListAdapter(this)
         val appUsageRecyclerView: RecyclerView = findViewById(R.id.rv_apps)
-        appUsageRecyclerView.adapter = appUsageListAdapter
+        appUsageRecyclerView.adapter = applicationListAdapter
         appUsageRecyclerView.layoutManager = LinearLayoutManager(this)
 
         viewModel.getApplications().observe(this, Observer { applicationList ->
-            appUsageListAdapter.setApplicationList(applicationList)
+            applicationListAdapter.setApplicationList(applicationList)
         })
     }
 

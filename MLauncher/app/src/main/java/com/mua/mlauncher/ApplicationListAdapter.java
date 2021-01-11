@@ -1,8 +1,11 @@
 package com.mua.mlauncher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,26 +18,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class ApplicationListAdapter
-        extends RecyclerView.Adapter<ApplicationListAdapter.AppUsageListViewHolder> {
-    private List<ApplicationInfo> applicationList = new ArrayList<>();
+        extends RecyclerView.Adapter<ApplicationListAdapter.AppUsageListViewHolder>
+        implements Filterable {
     private final ApplicationClickListener applicationClickListener;
-    private String searchQuery = "";
+    private List<ApplicationInfo> originalApplicationList = new ArrayList<>();
+    private List<ApplicationInfo> applicationList = new ArrayList<>();
 
     public ApplicationListAdapter(ApplicationClickListener applicationClickListener) {
         this.applicationClickListener = applicationClickListener;
-    }
-
-    protected class AppUsageListViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final ImageView icon;
-        private final View currentView;
-
-        AppUsageListViewHolder(View view) {
-            super(view);
-            name = view.findViewById(R.id.tv_item_application_name);
-            icon = view.findViewById(R.id.iv_item_application_drawable);
-            currentView = view;
-        }
     }
 
     @NotNull
@@ -54,25 +45,63 @@ public class ApplicationListAdapter
                 );
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+                applicationList.clear();
+                Log.d("d--muapp",applicationList.size()+" app");
+                Log.d("d--muapp",originalApplicationList.size()+" ori");
+                for (ApplicationInfo applicationInfo : originalApplicationList) {
+                    if (applicationInfo.getApplicationName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        applicationList.add(applicationInfo);
+                    }
+                }
+                filterResults.values = applicationList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                setApplicationListOnly((List<ApplicationInfo>) results.values);
+            }
+        };
+    }
 
     @Override
     public int getItemCount() {
         return applicationList.size();
     }
 
-    public void setApplicationList(List<ApplicationInfo> applicationList) {
+    private void setApplicationListOnly(List<ApplicationInfo> applicationList){
         this.applicationList = applicationList;
-        Collections.sort(applicationList,
-                (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
         notifyDataSetChanged();
     }
 
-    private void clearSearchQuery(){
-        this.searchQuery = "";
+    public void setApplicationList(List<ApplicationInfo> applicationList) {
+        Collections.sort(applicationList,
+                (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
+        this.originalApplicationList = new ArrayList<>(applicationList);
+        this.applicationList = new ArrayList<>(applicationList);
+
+        Log.d("d--muakk",applicationList.size()+" app");
+        Log.d("d--muakk",originalApplicationList.size()+" ori");
+        notifyDataSetChanged();
     }
 
-    private void setSearchQuery(String searchQuery){
-        this.searchQuery = searchQuery;
+    protected class AppUsageListViewHolder extends RecyclerView.ViewHolder {
+        private final TextView name;
+        private final ImageView icon;
+        private final View currentView;
+
+        AppUsageListViewHolder(View view) {
+            super(view);
+            name = view.findViewById(R.id.tv_item_application_name);
+            icon = view.findViewById(R.id.iv_item_application_drawable);
+            currentView = view;
+        }
     }
 
     /*
@@ -89,6 +118,8 @@ public class ApplicationListAdapter
 
 }
 
+
+/*
 enum ApplicationType {
 
     TYPE_CONTENT(0),
@@ -101,3 +132,5 @@ enum ApplicationType {
         this.id = id;
     }
 }
+
+ */
