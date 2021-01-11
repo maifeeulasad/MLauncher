@@ -1,6 +1,8 @@
 package com.mua.mlauncher
 
+import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +16,6 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         val appUsageListAdapter = ApplicationListAdapter(this)
         val appUsageRecyclerView: RecyclerView = findViewById(R.id.rv_apps)
@@ -45,7 +45,17 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     }
 
     override fun onApplicationClick(applicationInfo: com.mua.mlauncher.ApplicationInfo) {
-        Log.d("d--mua",applicationInfo.applicationPackage)
+        startApplication(applicationInfo.applicationPackage)
+    }
+
+
+    private fun startApplication(applicationPackage: String){
+        val intent: Intent
+        val pm: PackageManager = packageManager
+
+        intent = pm.getLaunchIntentForPackage(applicationPackage)!!
+
+        startActivity(intent)
     }
 
 }
