@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,9 +39,15 @@ public class ApplicationListAdapter
     public void onBindViewHolder(@NotNull AppUsageListViewHolder holder, int position) {
         holder.name.setText(applicationList.get(position).getApplicationName());
         holder.icon.setImageDrawable(applicationList.get(position).getApplicationDrawable());
-        holder.currentView
+        holder
+                .currentView
                 .setOnClickListener(
                         v -> applicationClickListener.onApplicationClick(applicationList.get(position))
+                );
+        holder
+                .infoButton
+                .setOnClickListener(
+                        v -> applicationClickListener.onApplicationInfoClick(applicationList.get(position))
                 );
     }
 
@@ -88,12 +95,15 @@ public class ApplicationListAdapter
     protected class AppUsageListViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView icon;
+        private final ImageButton infoButton;
+
         private final View currentView;
 
         AppUsageListViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.tv_item_application_name);
             icon = view.findViewById(R.id.iv_item_application_drawable);
+            infoButton = view.findViewById(R.id.ib_item_application_info);
             currentView = view;
         }
     }
