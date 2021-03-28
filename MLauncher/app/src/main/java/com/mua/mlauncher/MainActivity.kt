@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     private fun startApplication(applicationPackage: String) {
         val intent: Intent
         val pm: PackageManager = packageManager
-
         intent = pm.getLaunchIntentForPackage(applicationPackage)!!
 
         startActivity(intent)
@@ -84,6 +83,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
     private fun openApplicationInfo(applicationInfo: ApplicationInfo){
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.parse("package:${applicationInfo.applicationPackage}")
+
         startActivity(intent)
     }
 
