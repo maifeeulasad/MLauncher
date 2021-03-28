@@ -2,7 +2,9 @@ package com.mua.mlauncher
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -66,12 +68,22 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
         startApplication(applicationInfo.applicationPackage)
     }
 
+    override fun onApplicationInfoClick(applicationInfo: ApplicationInfo) {
+        openApplicationInfo(applicationInfo);
+    }
+
     private fun startApplication(applicationPackage: String) {
         val intent: Intent
         val pm: PackageManager = packageManager
 
         intent = pm.getLaunchIntentForPackage(applicationPackage)!!
 
+        startActivity(intent)
+    }
+
+    private fun openApplicationInfo(applicationInfo: ApplicationInfo){
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.data = Uri.parse("package:${applicationInfo.applicationPackage}")
         startActivity(intent)
     }
 
