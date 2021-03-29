@@ -8,10 +8,10 @@
     card_view:cardUseCompatPadding="true">
 
     <TextView
-        android:gravity="center"
         android:id="@+id/tv_item_application_type_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:textStyle="bold" />
 
 
@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
             android:background="@null"
             android:contentDescription="@string/open_app_info"
             android:src="@drawable/info32" />
