@@ -1,8 +1,14 @@
 package com.mua.mlauncher
 
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.view.KeyCharacterMap
+import android.view.KeyEvent
+import android.view.ViewConfiguration
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -13,8 +19,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val applications = MutableLiveData(mutableListOf<ApplicationInfo>())
     val queryString = ObservableField<String>("")
+    private val _navBarHeight = MutableLiveData(0)
+    val navBarHeight
+            : LiveData<Int>
+            = _navBarHeight
 
     init {
+        _navBarHeight.postValue(getNavBarHeight(application.applicationContext))
         listAllApplication(application.packageManager)
     }
 
@@ -57,5 +68,46 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             false
         }
     }
+
+    private fun getNavBarHeight(c: Context): Int {
+        val hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey()
+        val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+        if (!hasMenuKey && !hasBackKey) {
+            val resources: Resources = c.resources
+            val orientation: Int = resources.configuration.orientation
+            val resourceId: Int
+            resourceId = if (isTablet(c)) {
+                resources.getIdentifier(
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                        "navigation_bar_height"
+                    else
+                        "navigation_bar_height_landscape",
+                    "dimen",
+                    "android"
+                )
+            } else {
+                resources.getIdentifier(
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                        "navigation_bar_height"
+                    else
+                        "navigation_bar_width",
+                    "dimen",
+                    "android"
+                )
+            }
+            if (resourceId > 0) {
+                return resources.getDimensionPixelSize(resourceId)
+            }
+        }
+        return 0
+    }
+
+
+    private fun isTablet(c: Context): Boolean {
+        return ((c.resources.configuration.screenLayout
+                and Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+    }
+
 
 }
