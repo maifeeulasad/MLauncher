@@ -7,8 +7,16 @@
     card_view:cardElevation="5dp"
     card_view:cardUseCompatPadding="true">
 
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tv_item_application_type_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
+
 
     <RelativeLayout
+        android:id="@+id/rv_item_application_type_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
