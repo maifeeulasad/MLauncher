@@ -123,7 +123,6 @@ public class ApplicationListAdapter
         private final ImageButton infoButton;
 
         private final TextView header;
-
         private final RelativeLayout appDetails;
 
         private final View currentView;
