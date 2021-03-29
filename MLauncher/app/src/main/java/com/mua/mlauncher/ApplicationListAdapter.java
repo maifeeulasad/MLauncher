@@ -102,6 +102,7 @@ public class ApplicationListAdapter
 
     public List<ApplicationInfo> listHeaders(){
         List<ApplicationInfo> headers = new ArrayList<>();
+        headers.add(new ApplicationInfo("0-9"));
         for(int i=0;i<26;i++){
             headers.add(new ApplicationInfo(Character.toString((char)(i+'A'))));
         }
