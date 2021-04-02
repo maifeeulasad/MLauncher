@@ -13,6 +13,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,7 +29,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         _navBarHeight.postValue(getNavBarHeight(application.applicationContext))
-        listAllApplication(application.packageManager)
+        viewModelScope.launch(Dispatchers.IO) {
+            listAllApplication(application.packageManager)
+        }
     }
 
     fun getApplications(): LiveData<MutableList<ApplicationInfo>> {
