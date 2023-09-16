@@ -20,6 +20,7 @@
         <activity
             android:clearTaskOnLaunch="true"
             android:theme="@style/MLauncherTheme"
+            android:exported="true"
             android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
