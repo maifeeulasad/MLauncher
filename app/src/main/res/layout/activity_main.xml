@@ -18,6 +18,7 @@
         tools:context=".MainActivity">
 
         <EditText
+            android:hint="@string/search_an_application"
             android:text="@={main.queryString}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_apps"
+            marginBottom="@{main.navBarHeight}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

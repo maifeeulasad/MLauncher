@@ -5,7 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class ApplicationListAdapter
         extends RecyclerView.Adapter<ApplicationListAdapter.AppUsageListViewHolder>
@@ -36,12 +39,23 @@ public class ApplicationListAdapter
 
     @Override
     public void onBindViewHolder(@NotNull AppUsageListViewHolder holder, int position) {
-        holder.name.setText(applicationList.get(position).getApplicationName());
-        holder.icon.setImageDrawable(applicationList.get(position).getApplicationDrawable());
-        holder.currentView
-                .setOnClickListener(
-                        v -> applicationClickListener.onApplicationClick(applicationList.get(position))
-                );
+        if (getItemViewType(position) == ApplicationViewType.TYPE_CONTENT.id) {
+            holder.name.setText(applicationList.get(position).getApplicationName());
+            holder.icon.setImageDrawable(applicationList.get(position).getApplicationDrawable());
+            holder
+                    .currentView
+                    .setOnClickListener(
+                            v -> applicationClickListener.onApplicationClick(applicationList.get(position))
+                    );
+            holder
+                    .infoButton
+                    .setOnClickListener(
+                            v -> applicationClickListener.onApplicationInfoClick(applicationList.get(position))
+                    );
+        } else if (getItemViewType(position) == ApplicationViewType.TYPE_HEADER.id) {
+            holder.header.setText(applicationList.get(position).getHeader());
+            holder.appDetails.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -78,6 +92,7 @@ public class ApplicationListAdapter
     }
 
     public void setApplicationList(List<ApplicationInfo> applicationList) {
+        applicationList.addAll(listHeaders());
         Collections.sort(applicationList,
                 (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
         this.originalApplicationList = new ArrayList<>(applicationList);
@@ -85,46 +100,43 @@ public class ApplicationListAdapter
         notifyDataSetChanged();
     }
 
+    public List<ApplicationInfo> listHeaders(){
+        List<ApplicationInfo> headers = new ArrayList<>();
+        headers.add(new ApplicationInfo("0~9"));
+        for(int i=0;i<26;i++){
+            headers.add(new ApplicationInfo(Character.toString((char)(i+'A'))));
+        }
+        return headers;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return
+                applicationList.get(position).isContent()
+                        ? ApplicationViewType.TYPE_CONTENT.id
+                        : ApplicationViewType.TYPE_HEADER.id;
+    }
+
     protected class AppUsageListViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView icon;
+        private final ImageButton infoButton;
+
+        private final TextView header;
+        private final RelativeLayout appDetails;
+
         private final View currentView;
 
         AppUsageListViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.tv_item_application_name);
             icon = view.findViewById(R.id.iv_item_application_drawable);
+            infoButton = view.findViewById(R.id.ib_item_application_info);
+            header = view.findViewById(R.id.tv_item_application_type_header);
+            appDetails = view.findViewById(R.id.rv_item_application_type_content);
+
             currentView = view;
         }
     }
 
-    /*
-    @Override
-    public int getItemViewType(int position) {
-        if (applicationList.get(position).isContent()) {
-            return ApplicationType.TYPE_CONTENT;
-        } else {
-            return ApplicationType.TYPE_HEADER;
-        }
-    }
-
-     */
-
 }
-
-
-/*
-enum ApplicationType {
-
-    TYPE_CONTENT(0),
-    TYPE_HEADER(1),
-    ;
-
-    int id;
-
-    ApplicationType(int id) {
-        this.id = id;
-    }
-}
-
- */
