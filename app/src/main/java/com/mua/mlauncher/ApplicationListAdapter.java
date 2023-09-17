@@ -16,7 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class ApplicationListAdapter
@@ -92,7 +94,8 @@ public class ApplicationListAdapter
     }
 
     public void setApplicationList(List<ApplicationInfo> applicationList) {
-        applicationList.addAll(listHeaders());
+        List<ApplicationInfo> headers = listHeaders(applicationList);
+        applicationList.addAll(headers);
         Collections.sort(applicationList,
                 (o1, o2) ->
                         o1.getApplicationName().toLowerCase()
@@ -103,13 +106,24 @@ public class ApplicationListAdapter
         notifyDataSetChanged();
     }
 
-    public List<ApplicationInfo> listHeaders() {
-        List<ApplicationInfo> headers = new ArrayList<>();
-        headers.add(new ApplicationInfo("0~9"));
-        for (int i = 0; i < 26; i++) {
-            headers.add(new ApplicationInfo(Character.toString((char) (i + 'A'))));
+    public List<ApplicationInfo> listHeaders(List<ApplicationInfo> applicationList) {
+        Set<String> presentHeaders = new HashSet<>();
+
+        for (ApplicationInfo appInfo : applicationList) {
+            String firstCharString = appInfo.getApplicationName().toUpperCase().substring(0, 1);
+            if (Character.isLetter(firstCharString.charAt(0))) {
+                presentHeaders.add(firstCharString);
+            } else {
+                presentHeaders.add("#");
+            }
         }
-        return headers;
+
+        List<ApplicationInfo> resultantHeaders = new ArrayList<>();
+        for (String header : presentHeaders) {
+            resultantHeaders.add(new ApplicationInfo(header));
+        }
+
+        return resultantHeaders;
     }
 
     @Override
