@@ -78,9 +78,20 @@ public class ApplicationListAdapter
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                setApplicationListOnly((List<ApplicationInfo>) results.values);
+                List<ApplicationInfo> applicationList = (List<ApplicationInfo>) results.values;
+                setApplicationListOnly(addHeadersAndSort(applicationList));
             }
         };
+    }
+
+    private List<ApplicationInfo> addHeadersAndSort(List<ApplicationInfo> applicationList) {
+        applicationList.addAll(listHeaders(applicationList));
+        Collections.sort(applicationList,
+                (o1, o2) ->
+                        o1.getApplicationName().toLowerCase()
+                                .compareTo(o2.getApplicationName().toLowerCase())
+        );
+        return applicationList;
     }
 
     @Override
@@ -94,15 +105,10 @@ public class ApplicationListAdapter
     }
 
     public void setApplicationList(List<ApplicationInfo> applicationList) {
-        List<ApplicationInfo> headers = listHeaders(applicationList);
-        applicationList.addAll(headers);
-        Collections.sort(applicationList,
-                (o1, o2) ->
-                        o1.getApplicationName().toLowerCase()
-                                .compareTo(o2.getApplicationName().toLowerCase())
-        );
-        this.originalApplicationList = new ArrayList<>(applicationList);
-        this.applicationList = new ArrayList<>(applicationList);
+        List<ApplicationInfo> applicationListWithHeaderAndSorted = addHeadersAndSort(applicationList);
+
+        this.originalApplicationList = new ArrayList<>(applicationListWithHeaderAndSorted);
+        this.applicationList = new ArrayList<>(applicationListWithHeaderAndSorted);
         notifyDataSetChanged();
     }
 
