@@ -6,8 +6,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
@@ -27,13 +25,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val queryString = ObservableField<String>("")
     private val _navBarHeight = MutableLiveData(0)
     val navBarHeight
-            : LiveData<Int>
-            = _navBarHeight
+            : LiveData<Int> = _navBarHeight
+    val loading = MutableLiveData(true)
 
     init {
         _navBarHeight.postValue(getNavBarHeight(application.applicationContext))
         viewModelScope.launch(Dispatchers.IO) {
             listAllApplication(application.packageManager)
+        }
+        applications.observeForever {
+            loading.postValue(it.size == 0)
         }
     }
 
@@ -41,7 +42,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return applications
     }
 
-    fun loadApplicationHome(packageInfo:PackageInfo,packageManager: PackageManager): Drawable {
+    fun loadApplicationHome(packageInfo: PackageInfo, packageManager: PackageManager): Drawable {
         return packageInfo.applicationInfo.loadIcon(packageManager)
     }
 
@@ -57,7 +58,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
             val applicationPackage = packageInfo.applicationInfo.packageName
 
-            if(isUsableApplication(packageManager,applicationPackage)){
+            if (isUsableApplication(packageManager, applicationPackage)) {
                 applicationList.add(
                     ApplicationInfo(
                         applicationName,
@@ -70,11 +71,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         applications.postValue(applicationList)
     }
 
-    private fun getAllApplications(packageManager: PackageManager) : List<PackageInfo> {
+    private fun getAllApplications(packageManager: PackageManager): List<PackageInfo> {
         return packageManager.getInstalledPackages(0)
     }
 
-    private fun isUsableApplication(packageManager: PackageManager, packageName: String) : Boolean{
+    private fun isUsableApplication(packageManager: PackageManager, packageName: String): Boolean {
         return try {
             packageManager.getLaunchIntentForPackage(packageName) ?: return false
             true

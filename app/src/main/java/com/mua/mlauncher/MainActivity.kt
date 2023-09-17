@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
 
         initSearch()
         initList()
+        initLoading()
     }
 
     private fun initSearch() {
@@ -63,13 +65,20 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
         })
     }
 
+    private fun initLoading() {
+        viewModel.loading.observeForever {
+            mBinding.loading.visibility = if (it) View.VISIBLE else View.GONE
+            mBinding.content.visibility = if (!it) View.VISIBLE else View.GONE
+        }
+    }
+
 
     override fun onApplicationClick(applicationInfo: ApplicationInfo) {
         startApplication(applicationInfo.applicationPackage)
     }
 
     override fun onApplicationInfoClick(applicationInfo: ApplicationInfo) {
-        openApplicationInfo(applicationInfo);
+        openApplicationInfo(applicationInfo)
     }
 
     private fun startApplication(applicationPackage: String) {
@@ -80,7 +89,7 @@ class MainActivity : AppCompatActivity(), ApplicationClickListener {
         startActivity(intent)
     }
 
-    private fun openApplicationInfo(applicationInfo: ApplicationInfo){
+    private fun openApplicationInfo(applicationInfo: ApplicationInfo) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.parse("package:${applicationInfo.applicationPackage}")
 
