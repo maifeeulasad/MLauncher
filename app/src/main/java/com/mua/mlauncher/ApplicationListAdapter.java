@@ -94,17 +94,20 @@ public class ApplicationListAdapter
     public void setApplicationList(List<ApplicationInfo> applicationList) {
         applicationList.addAll(listHeaders());
         Collections.sort(applicationList,
-                (o1, o2) -> o1.getApplicationName().toLowerCase().compareTo(o2.getApplicationName().toLowerCase()));
+                (o1, o2) ->
+                        o1.getApplicationName().toLowerCase()
+                                .compareTo(o2.getApplicationName().toLowerCase())
+        );
         this.originalApplicationList = new ArrayList<>(applicationList);
         this.applicationList = new ArrayList<>(applicationList);
         notifyDataSetChanged();
     }
 
-    public List<ApplicationInfo> listHeaders(){
+    public List<ApplicationInfo> listHeaders() {
         List<ApplicationInfo> headers = new ArrayList<>();
         headers.add(new ApplicationInfo("0~9"));
-        for(int i=0;i<26;i++){
-            headers.add(new ApplicationInfo(Character.toString((char)(i+'A'))));
+        for (int i = 0; i < 26; i++) {
+            headers.add(new ApplicationInfo(Character.toString((char) (i + 'A'))));
         }
         return headers;
     }

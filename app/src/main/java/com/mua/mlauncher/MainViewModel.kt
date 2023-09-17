@@ -6,6 +6,9 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.ViewConfiguration
@@ -38,6 +41,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return applications
     }
 
+    fun loadApplicationHome(packageInfo:PackageInfo,packageManager: PackageManager): Drawable {
+        return packageInfo.applicationInfo.loadIcon(packageManager)
+    }
+
     private fun listAllApplication(packageManager: PackageManager) {
         val applicationList: MutableList<ApplicationInfo> = mutableListOf()
         val appList = getAllApplications(packageManager)
@@ -45,7 +52,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val packageInfo = appList[i]
             val applicationName =
                 packageInfo.applicationInfo.loadLabel(packageManager).toString()
-            val applicationDrawable = packageInfo.applicationInfo.loadIcon(packageManager)
+            val applicationDrawableProvider = {
+                packageInfo.applicationInfo.loadIcon(packageManager)
+            }
             val applicationPackage = packageInfo.applicationInfo.packageName
 
             if(isUsableApplication(packageManager,applicationPackage)){
@@ -53,7 +62,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     ApplicationInfo(
                         applicationName,
                         applicationPackage,
-                        applicationDrawable
+                        applicationDrawableProvider
                     )
                 )
             }

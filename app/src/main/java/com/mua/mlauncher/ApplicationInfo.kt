@@ -7,13 +7,21 @@ import android.graphics.drawable.Drawable
 class ApplicationInfo(
     var applicationName: String,
     var applicationPackage: String,
-    var applicationDrawable: Drawable,
+    applicationDrawableProvider: () -> Drawable,
     var isContent: Boolean,
     var header: String
 ) {
-    constructor(header: String)
-            : this(header, "", ColorDrawable(Color.TRANSPARENT), false, header)
+    val applicationDrawable: Drawable by lazy {
+        applicationDrawableProvider()
+    }
 
-    constructor(applicationName: String, applicationPackage: String, applicationDrawable: Drawable)
-            : this(applicationName, applicationPackage, applicationDrawable, true, "")
+    constructor(header: String)
+            : this(header, "", { ColorDrawable(Color.TRANSPARENT) }, false, header)
+
+    constructor(
+        applicationName: String,
+        applicationPackage: String,
+        applicationDrawableProvider: () -> Drawable
+    )
+            : this(applicationName, applicationPackage, applicationDrawableProvider, true, "")
 }
