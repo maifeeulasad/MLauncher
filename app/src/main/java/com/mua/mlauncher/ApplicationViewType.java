@@ -8,7 +8,7 @@ public enum ApplicationViewType {
     TYPE_HEADER(11),
     ;
 
-    int id;
+    final int id;
 
     ApplicationViewType(int id) {
         this.id = id;

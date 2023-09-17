@@ -89,8 +89,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (!hasMenuKey && !hasBackKey) {
             val resources: Resources = c.resources
             val orientation: Int = resources.configuration.orientation
-            val resourceId: Int
-            resourceId = if (isTablet(c)) {
+            val resourceId: Int = if (isTablet(c)) {
                 resources.getIdentifier(
                     if (orientation == Configuration.ORIENTATION_PORTRAIT)
                         "navigation_bar_height"
