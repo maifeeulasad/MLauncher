@@ -7,9 +7,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -146,7 +146,7 @@ public class ApplicationListAdapter
         private final ImageButton infoButton;
 
         private final TextView header;
-        private final RelativeLayout appDetails;
+        private final LinearLayoutCompat appDetails;
 
         private final View currentView;
 
